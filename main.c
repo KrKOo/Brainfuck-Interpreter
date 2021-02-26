@@ -1,3 +1,9 @@
+//===============================================
+//Project: Brainfuck-Interpreter
+//Author: KrKOo
+//Email: krkoo.123@gmail.com
+//===============================================
+
 #include "stdio.h"
 #include "sys/socket.h"
 #include "arpa/inet.h"
@@ -19,7 +25,7 @@ int main()
     }
     
     server.sin_family = AF_INET;
-    server.sin_addr.s_addr = INADDR_ANY;
+    server.sin_addr.s_addr = INADDR_ANY;  // or 0
     server.sin_port = htons(9090);    
     
     //This is how the (sockaddr_in)server looks like in the memory
@@ -41,7 +47,6 @@ int main()
     int new_socket;
     socklen_t c = sizeof(struct sockaddr_in);
     //char c[] = {0,0,0,16};    <- this can replace the above row
-    char len = 132;
      
 
     while((new_socket = accept(socket_desc, &client, &c)) >= 0)
