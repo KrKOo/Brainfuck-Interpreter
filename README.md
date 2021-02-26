@@ -1,6 +1,8 @@
 # Brainfuck-Interpreter
 ## A simple brainfuck interpreter with syscall support
 
+The project is only tested on Linux, the 'libffcall' library could potentially make some problems on Widnows.
+
 ### Syscall Format
 
 1. The value at the current cell is considered the syscall code
@@ -43,6 +45,22 @@ The argument order must remain the same as in the standard C library.
 //Call the syscall -> syscall(1, 1, message, 2);
 %
 ```
+
+### Compilation
+
+The interpreter uses the "avcall.h" header so to compile the interpreter you must install the 'libffcall' library -> https://www.gnu.org/software/libffcall/. 
+When you have the library, you can simply compile the project using 'make'.
+
+#### To compile the interpreter:
+```
+$ make interpreter
+```
+#### To compile the webserver.bf equivalent written in C:
+```
+$ make main
+```
+
+
 
 ### Using the interpreter
 
