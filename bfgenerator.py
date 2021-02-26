@@ -1,3 +1,12 @@
+"""
+===============================================
+Project: Brainfuck-Interpreter
+Author: KrKOo
+Email: krkoo.123@gmail.com
+===============================================
+"""
+
+
 import math
 
 string = """HTTP/1.1 200 OK

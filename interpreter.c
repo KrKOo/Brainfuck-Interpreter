@@ -1,3 +1,9 @@
+//===============================================
+//Project: Brainfuck-Interpreter
+//Author: KrKOo
+//Email: krkoo.123@gmail.com
+//===============================================
+
 #include "avcall.h"
 #include "stdbool.h"
 #include "stdio.h"
