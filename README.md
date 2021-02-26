@@ -22,23 +22,23 @@ The argument order must remain the same as in the standard C library.
 
 #### Write "Hi" to stdout using syscalls:
 ``` C
-    +                       //syscall code = 1 (write)
-    >+++                    //Argument count = 3    
++                       //syscall code = 1 (write)
+>+++                    //Argument count = 3    
 //----1st Argument----
-    >                       //The argument content is not a pointer
-    >+                      //Arument length = 1 cell/byte
-    >+                      //Argument content = 1 => stdout
+>                       //The argument content is not a pointer
+>+                      //Arument length = 1 cell/byte
+>+                      //Argument content = 1 => stdout
 //----2nd Argument----
-    >+                      //The argument content is a pointer
-    >+                      //Argument length = 1 cell/byte
-    >+++++++++++            //Argument content = 11 (pointer to the message on the 11th cell)   
+>+                      //The argument content is a pointer
+>+                      //Argument length = 1 cell/byte
+>+++++++++++            //Argument content = 11 (pointer to the message on the 11th cell)   
 //----3rd Argument----
-    >                       //The argument content is not a pointer
-    >+                      //Argument length = 1 cell/byte   
-    >++                     //Argument content = 2 (lenght of the message)
+>                       //The argument content is not a pointer
+>+                      //Argument length = 1 cell/byte   
+>++                     //Argument content = 2 (lenght of the message)
 //----The message----
-    >>++++++++[<+++++++++>-]<               //72 -> 'H'
-    >>++++++++++[<++++++++++>-]<+++++       //105 -> 'i'
+>>++++++++[<+++++++++>-]<               //72 -> 'H'
+>>++++++++++[<++++++++++>-]<+++++       //105 -> 'i'
 //----Return to cell 0
 <<<<<<<<<<<<
 
