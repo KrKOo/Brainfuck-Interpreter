@@ -1,7 +1,7 @@
 # Brainfuck-Interpreter
 ## A simple brainfuck interpreter with syscall support
 
-The project is only tested on Linux, the 'libffcall' library could potentially make some problems on Widnows.
+The project is only tested on Linux, the "libffcall" library could potentially make some problems on Widnows.
 
 ### Syscall Format
 
@@ -12,7 +12,7 @@ The project is only tested on Linux, the 'libffcall' library could potentially m
     2. The second cell indicated the length of the argument in bytes. (not implemented yet)
     3. The third cell is the argument content. (only 1 byte for now)
 
-The syscall is called with the '%' symbol and the return value is set to the current cell. 
+The syscall is called with the "%" symbol and the return value is set to the current cell. 
 
 You can check the list of syscalls here: https://filippo.io/linux-syscall-table/
 
@@ -20,7 +20,9 @@ The argument order must remain the same as in the standard C library.
 
 ### Example code
 
-#### Write "Hi" to stdout using syscalls:
+All the examples are in the [demo](demo/) folder.
+
+#### Write "Hi" to stdout using syscalls ([stdout.bf](demo/stdout.bf)):
 ``` C
 +                       //syscall code = 1 (write)
 >+++                    //Argument count = 3    
@@ -46,10 +48,16 @@ The argument order must remain the same as in the standard C library.
 %
 ```
 
+
+#### A simple web server written in brainfuck ([webserver.bf](demo/webserver.bf)):
+
+![webserver.bf](demo/webserver_output.png "Web Server")
+
+
 ### Compilation
 
-The interpreter uses the "avcall.h" header so to compile the interpreter you must install the 'libffcall' library -> https://www.gnu.org/software/libffcall/. 
-When you have the library, you can simply compile the project using 'make'.
+The interpreter uses the "avcall.h" header so to compile the interpreter, you must install the 'libffcall' library -> https://www.gnu.org/software/libffcall/. 
+When you have the library, you can simply compile the project using "make".
 
 #### To compile the interpreter:
 ```
