@@ -1,16 +1,17 @@
 //===============================================
-//Project: Brainfuck-Interpreter
-//Author: KrKOo
-//Email: krkoo.123@gmail.com
+// Project: Brainfuck-Interpreter
+// Author: KrKOo
+// Email: krkoo.123@gmail.com
 //===============================================
 
-#include "avcall.h"
 #include "stdbool.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
 #include "sys/socket.h"
 #include "unistd.h"
+
+#define MEMORY_SIZE 30000
 #define ALLOC_SIZE 10
 #define SYSCALL_MAX_ARG_COUNT 7
 
@@ -18,7 +19,7 @@
 #define ALLOCATION_ERROR 2
 
 typedef struct {
-    unsigned char memory[30000];
+    unsigned char memory[MEMORY_SIZE];
     unsigned char *pointer;
 } bf_state;
 
@@ -33,14 +34,6 @@ typedef struct {
     size_t size;
     size_t allocated;
 } int_vector;
-
-typedef struct {
-    union {
-        unsigned char value;
-        char *pointer;
-    } data;
-    bool isPointer;
-} char_type;
 
 void bf_state_ctor(bf_state *bf_state) {
     bf_state->pointer = memset(bf_state->memory, 0, sizeof(bf_state->memory));
@@ -99,47 +92,35 @@ void int_vector_push(int_vector *vector, int num) {
 
 void int_vector_pop(int_vector *vector) { vector->size--; }
 
-char_type *parse_syscall(bf_state *state, char *argc) {
-    *argc = state->pointer[1] + 1;
+int64_t *parse_syscall(bf_state *state) {
+    int argc = state->pointer[1] + 1;  // +1 for the syscall code
 
-    char_type *arg_array = calloc(*argc, sizeof(char_type));
+    int64_t *arg_array = calloc(argc, sizeof(int64_t));
     if (arg_array == NULL) exit(ALLOCATION_ERROR);
-    
-    arg_array[0].isPointer = false;
-    arg_array[0].data.value = state->pointer[0];
+
+    arg_array[0] = state->pointer[0];
 
     int pointerCounter = 2;
 
-    for (int i = 1; i < *argc; i++) {
+    for (int i = 1; i < argc; i++) {
         bool is_pointer = state->pointer[pointerCounter++];
         char arg_len = state->pointer[pointerCounter++];
-        (void) arg_len;
+        (void)arg_len;  // TODO: Implement variable argument length
 
         if (is_pointer) {
-            arg_array[i].isPointer = true;
-            arg_array[i].data.pointer =
-                (char*)&state->memory[(int)state->pointer[pointerCounter++]];
+            arg_array[i] =
+                (int64_t)&state->memory[(int)state->pointer[pointerCounter++]];
         } else {
-            arg_array[i].isPointer = false;
-            arg_array[i].data.value = state->pointer[pointerCounter++];
+            arg_array[i] = state->pointer[pointerCounter++];
         }
     }
+
     return arg_array;
 }
 
-int call_syscall(char argc, char_type *arg_array) {
-    av_alist argList;
-    int retVal;
-    av_start_int(argList, syscall, &retVal);
-    for (int i = 0; i < argc; i++) {
-        if (arg_array[i].isPointer) {
-            av_ptr(argList, char *, arg_array[i].data.pointer);
-        } else {
-            av_char(argList, arg_array[i].data.value);
-        }
-    }
-    av_call(argList);
-    return retVal;
+int call_syscall(int64_t *arg_array) {
+    return syscall(arg_array[0], arg_array[1], arg_array[2], arg_array[3],
+                   arg_array[4], arg_array[5], arg_array[6]);
 }
 
 void bf_execute(char_vector *code, bf_state *state) {
@@ -185,14 +166,13 @@ void bf_execute(char_vector *code, bf_state *state) {
                 int_vector_pop(&jumps);
                 break;
             case '%': {
-                char argc;
-                char_type *arg_array = parse_syscall(state, &argc);
-                *state->pointer = call_syscall(argc, arg_array);
+                int64_t *arg_array = parse_syscall(state);
+                *state->pointer = call_syscall(arg_array);
                 free(arg_array);
                 break;
             }
             case '?':
-                putchar('c');
+                printf("Debug");
                 break;
         }
     }
