@@ -1,7 +1,7 @@
 # Brainfuck-Interpreter
 ## A simple brainfuck interpreter with syscall support
 
-The project is only tested on Linux, the "libffcall" library could potentially make some problems on Widnows.
+The project is only tested on Linux, but it should work on other OSes too.
 
 ### Syscall Format
 
@@ -56,8 +56,7 @@ All the examples are in the [demo](demo/) folder.
 
 ### Compilation
 
-The interpreter uses the "avcall.h" header so to compile the interpreter, you must install the 'libffcall' library -> https://www.gnu.org/software/libffcall/. 
-When you have the library, you can simply compile the project using "make".
+You can simply compile the project using "make".
 
 #### To compile the interpreter:
 ```
@@ -67,7 +66,6 @@ $ make interpreter
 ```
 $ make main
 ```
-
 
 
 ### Using the interpreter
