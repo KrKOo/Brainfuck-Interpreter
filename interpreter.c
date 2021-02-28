@@ -96,7 +96,7 @@ void int_vector_pop(int_vector *vector) { vector->size--; }
 int64_t *parse_syscall(bf_state *state) {
     int argc = state->pointer[1] + 1;  // +1 for the syscall code
 
-    int64_t *arg_array = calloc(argc, sizeof(int64_t));
+    int64_t *arg_array = calloc(SYSCALL_MAX_ARG_COUNT, sizeof(int64_t));
     if (arg_array == NULL) exit(ALLOCATION_ERROR);
 
     arg_array[0] = state->pointer[0];
@@ -194,6 +194,7 @@ char_vector parseFileToArray(char *fileName) {
     while ((c = fgetc(file)) != EOF) {
         char_vector_push(&code, c);
     }
+    fclose(file);
     return code;
 }
 
