@@ -17,6 +17,7 @@
 
 #define FILE_OPEN_ERROR 1
 #define ALLOCATION_ERROR 2
+#define ARGUMENT_ERROR 3
 
 typedef struct {
     unsigned char memory[MEMORY_SIZE];
@@ -182,7 +183,8 @@ void bf_execute(char_vector *code, bf_state *state) {
 char_vector parseFileToArray(char *fileName) {
     FILE *file = fopen(fileName, "r");
     if (file == NULL) {
-        printf("Could not open the file");
+        printf("Could not open the file\n");
+        exit(FILE_OPEN_ERROR);
     }
 
     char_vector code;
@@ -199,8 +201,10 @@ int main(int argc, char **argv) {
     bf_state bf;
     bf_state_ctor(&bf);
 
-    if (argc < 1) return 2;
-
+    if (argc < 2) {
+        fprintf(stderr, "No source file specified\n");
+        exit(ARGUMENT_ERROR);
+    }
     char_vector code;
     char_vector_ctor(&code);
     code = parseFileToArray(argv[1]);
