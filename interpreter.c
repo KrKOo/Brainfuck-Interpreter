@@ -17,6 +17,7 @@
 
 #define FILE_OPEN_ERROR 1
 #define ALLOCATION_ERROR 2
+#define ARGUMENT_ERROR 3
 
 typedef struct {
     unsigned char memory[MEMORY_SIZE];
@@ -95,7 +96,7 @@ void int_vector_pop(int_vector *vector) { vector->size--; }
 int64_t *parse_syscall(bf_state *state) {
     int argc = state->pointer[1] + 1;  // +1 for the syscall code
 
-    int64_t *arg_array = calloc(argc, sizeof(int64_t));
+    int64_t *arg_array = calloc(SYSCALL_MAX_ARG_COUNT, sizeof(int64_t));
     if (arg_array == NULL) exit(ALLOCATION_ERROR);
 
     arg_array[0] = state->pointer[0];
@@ -182,7 +183,8 @@ void bf_execute(char_vector *code, bf_state *state) {
 char_vector parseFileToArray(char *fileName) {
     FILE *file = fopen(fileName, "r");
     if (file == NULL) {
-        printf("Could not open the file");
+        printf("Could not open the file\n");
+        exit(FILE_OPEN_ERROR);
     }
 
     char_vector code;
@@ -192,6 +194,7 @@ char_vector parseFileToArray(char *fileName) {
     while ((c = fgetc(file)) != EOF) {
         char_vector_push(&code, c);
     }
+    fclose(file);
     return code;
 }
 
@@ -199,8 +202,10 @@ int main(int argc, char **argv) {
     bf_state bf;
     bf_state_ctor(&bf);
 
-    if (argc < 1) return 2;
-
+    if (argc < 2) {
+        fprintf(stderr, "No source file specified\n");
+        exit(ARGUMENT_ERROR);
+    }
     char_vector code;
     char_vector_ctor(&code);
     code = parseFileToArray(argv[1]);
